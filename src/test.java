@@ -97,17 +97,18 @@ public class test extends JFrame implements ActionListener {
             }
             System.out.println("");
         }
-        if(e.getSource()== jmi_bur) {
-
-
-
-
-
-
-
-
+        if(e.getSource()== jmi_quick) {
+            quick amg = new quick();
+            amg.setVisible(true);
 
 
         }
+        if(e.getSource()== jmi_Shell) {
+            Shell she = new Shell();
+            she.setVisible(true);
+
+
+        }
+
     }
 }
