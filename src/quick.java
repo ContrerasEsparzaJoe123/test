@@ -26,21 +26,21 @@ public class quick extends JFrame implements ActionListener {
 
 
         if(e.getSource()==btn_aceptar) {
-            Integer[] result = new Integer[0];
+            Double[] result = new Double[0];
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javat", "root", "");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dht_data1", "root", "");
                 Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select * from temp;");
+                ResultSet rs = stmt.executeQuery("select * from dht_data1;");
 
-                ArrayList<Integer> list = new ArrayList<Integer>();
+                ArrayList<Double> list = new ArrayList<Double>();
                 while (rs.next()) {
                     //list.add(rs.getDate("humidity"));
-                    list.add(rs.getInt("temperatura"));
+                    list.add(rs.getDouble("Temperatura"));
                     //list.add(rs.getInt("humidity"));
                 }
 
-                result = new Integer[list.size()];
+                result = new Double[list.size()];
                 result = list.toArray(result);
 
 
@@ -65,7 +65,7 @@ public class quick extends JFrame implements ActionListener {
 
 
 
-    private static void quickSort(Integer[] input, int start, int end) {
+    private static void quickSort(Double[] input, int start, int end) {
         if (end - start<2){
             return;
         }
@@ -75,8 +75,8 @@ public class quick extends JFrame implements ActionListener {
 
 
     }
-    public static int partition(Integer[] input, int start, int end){
-        int pivot = input[start];
+    public static int partition(Double[] input, int start, int end){
+        Double pivot = input[start];
         int i= start;
         int j = end;
 

@@ -68,20 +68,20 @@ public class test extends JFrame implements ActionListener {
         if(e.getSource()== jmi_bur) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javat", "root","");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dht_data1", "root","");
                 Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select * from temp;");
+                ResultSet rs = stmt.executeQuery("select * from dht_data1;");
 
-                ArrayList<Integer> list= new ArrayList<Integer>();
+                ArrayList<Double> list= new ArrayList<Double>();
                 while (rs.next()) {
                     //list.add(rs.getDate("humidity"));
-                    list.add(rs.getInt("temperatura"));
+                    list.add(rs.getDouble("Temperatura"));
                     //list.add(rs.getInt("humidity"));
                 }
 
-                Integer[] result = new Integer[list.size()];
+                Double[] result = new Double[list.size()];
                 result = list.toArray(result);
-                int aux;
+                Double aux;
 
                 for(int i=0; i<(result.length-1); i++) {
                     for(int j=0; j<(result.length-1); j++) {
