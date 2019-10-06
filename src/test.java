@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class test extends JFrame implements ActionListener {
@@ -55,47 +57,59 @@ public class test extends JFrame implements ActionListener {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         test ventanaPrincipal = new test();
+
+
+
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()== jmi_bur) {
-            Scanner entrada= new Scanner(System.in);
-            int arreglo[], elementos, aux;
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javat", "root","");
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select * from temp;");
 
-            elementos = Integer.parseInt(JOptionPane.showInputDialog("Digite el numero de elementos en el arreglo"));
+                ArrayList<Integer> list= new ArrayList<Integer>();
+                while (rs.next()) {
+                    //list.add(rs.getDate("humidity"));
+                    list.add(rs.getInt("temperatura"));
+                    //list.add(rs.getInt("humidity"));
+                }
 
-            arreglo = new int[elementos];
+                Integer[] result = new Integer[list.size()];
+                result = list.toArray(result);
+                int aux;
 
-            for(int i=0; i<elementos; i++) {
-                System.out.print((i+1)+". Digite un número: ");
-
-                arreglo[i]=entrada.nextInt();
-            }
-
-            //Método burbuja
-            for(int i=0; i<(elementos-1); i++) {
-                for(int j=0; j<(elementos-1); j++) {
-                    if(arreglo[j] > arreglo[j+1]) { //Si número actual > número siguiente
-                        aux = arreglo[j];
-                        arreglo[j] = arreglo[j+1];
-                        arreglo[j+1] = aux;
+                for(int i=0; i<(result.length-1); i++) {
+                    for(int j=0; j<(result.length-1); j++) {
+                        if(result[j] > result[j+1]) { //Si número actual > número siguiente
+                            aux = result[j];
+                            result[j] = result[j+1];
+                            result[j+1] = aux;
+                        }
                     }
                 }
-            }
 
-            //Mostrando el arreglo de forma creciente
-            System.out.print("\nArreglo ordenado en forma creciente ");
-            for(int i=0; i<elementos; i++) {
-                System.out.print(arreglo[i]+ " - ");
-            }
+                //Mostrando el arreglo de forma creciente
+                System.out.print("\nArreglo ordenado en forma creciente ");
+                for(int i=0; i<result.length; i++) {
+                    System.out.print(result[i]+ " - ");
+                }
+                System.out.print("\nArreglo ordenado en forma decreciente ");
+                for (int i = (result.length - 1); i >= 0; i--) {
+                    System.out.print(result[i] + " - ");
+                }
 
-            //Mostrando el arreglo de forma decreciente
-            System.out.print("\nArreglo ordenado en forma decreciente ");
-            for(int i=(elementos-1); i>=0; i--) {
-                System.out.print(arreglo[i]+ " - ");
+
+
+            } catch (ClassNotFoundException t) {
+                t.printStackTrace();
+            } catch (SQLException t) {
+                t.printStackTrace();
             }
-            System.out.println("");
         }
         if(e.getSource()== jmi_quick) {
             quick amg = new quick();

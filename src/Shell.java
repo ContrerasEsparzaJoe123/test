@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Shell  extends JFrame implements ActionListener {
@@ -22,38 +24,51 @@ public class Shell  extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==btn_aceptar){
-            Scanner entrada= new Scanner(System.in);
-            int intArray[], elementos;
-            elementos = Integer.parseInt(JOptionPane.showInputDialog("Digite el numero de elementos en el arreglo"));
-            intArray = new int[elementos];
+            Integer[] result = new Integer[0];
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/javat", "root", "");
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select * from temp;");
 
-            for(int i=0; i<elementos; i++) {
-                System.out.print((i+1)+". Digite un número: ");
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                while (rs.next()) {
+                    //list.add(rs.getDate("humidity"));
+                    list.add(rs.getInt("temperatura"));
+                    //list.add(rs.getInt("humidity"));
+                }
 
-                intArray[i]=entrada.nextInt();
+                result = new Integer[list.size()];
+                result = list.toArray(result);
+
+
+            } catch (ClassNotFoundException r) {
+                r.printStackTrace();
+            } catch (SQLException r) {
+                r.printStackTrace();
             }
 
-            for (int gap = intArray.length /2; gap > 0; gap/= 2) {
+            for (int gap = result.length /2; gap > 0; gap/= 2) {
 
-                for (int i = gap; i<intArray.length; i++) {
-                    int newElement = intArray[i];
+                for (int i = gap; i<result.length; i++) {
+                    int newElement = result[i];
 
                     int j = i;
-                    while (j >= gap && intArray[j - gap] > newElement) {
-                        intArray[j] = intArray[j - gap];
+                    while (j >= gap && result[j - gap] > newElement) {
+                        result[j] = result[j - gap];
                         j -= gap;
                     }
-                    intArray[j] = newElement;
+                    result[j] = newElement;
                 }
             }
             System.out.print("\nArreglo ordenado en forma creciente ");
-            for (int i= 0; i< intArray.length; i++){
-                System.out.println(intArray[i]+  " - ");
+            for (int i= 0; i< result.length; i++){
+                System.out.println(result[i]+  " - ");
 
             }
             System.out.print("\nArreglo ordenado en forma decreciente ");
-            for(int i=(elementos-1); i>=0; i--) {
-                System.out.print(intArray[i]+ " - ");
+            for(int i=(result.length-1); i>=0; i--) {
+                System.out.print(result[i]+ " - ");
             }
         }
     }
