@@ -77,12 +77,18 @@ public class test extends JFrame implements ActionListener {
             }
             System.out.println("MySQL JDBC Driver Registered!");
             Connection connection = null;
-            try {
-                connection = DriverManager
-                        .getConnection("jdbc:mysql://localhost:3306/dht_data1", "root", "");
+
+            String url = "jdbc:mysql://localhost:3306/dht_data1?useSSL=false";
+            String user = "root";
+            String password = "";
+
+
+            try (Connection con = DriverManager.getConnection(url, user, password);
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select * from dht_data1;")){
+
                 System.out.println("SQL Connection to database established!");
-                Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery("select * from dht_data1;");
+
 
                 ArrayList<Double> list = new ArrayList<Double>();
                 while (rs.next()) {
