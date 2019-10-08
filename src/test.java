@@ -66,20 +66,32 @@ public class test extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()== jmi_bur) {
+            Double[] result = new Double[0];
+            try
+            {
+                Class.forName("com.mysql.jdbc.Driver");
+            }
+            catch (ClassNotFoundException r) {
+                System.out.println("MySQL JDBC Driver not found !!");
+                return;
+            }
+            System.out.println("MySQL JDBC Driver Registered!");
+            Connection connection = null;
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dht_data1", "root","");
-                Statement stmt = con.createStatement();
+                connection = DriverManager
+                        .getConnection("jdbc:mysql://localhost:3306/dht_data1", "root", "");
+                System.out.println("SQL Connection to database established!");
+                Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery("select * from dht_data1;");
 
-                ArrayList<Double> list= new ArrayList<Double>();
+                ArrayList<Double> list = new ArrayList<Double>();
                 while (rs.next()) {
                     //list.add(rs.getDate("humidity"));
                     list.add(rs.getDouble("Temperatura"));
                     //list.add(rs.getInt("humidity"));
                 }
 
-                Double[] result = new Double[list.size()];
+                result = new Double[list.size()];
                 result = list.toArray(result);
                 Double aux;
 
@@ -103,13 +115,21 @@ public class test extends JFrame implements ActionListener {
                     System.out.print(result[i] + " - ");
                 }
 
-
-
-            } catch (ClassNotFoundException t) {
-                t.printStackTrace();
-            } catch (SQLException t) {
-                t.printStackTrace();
+            } catch (SQLException r) {
+                System.out.println("Connection Failed! Check output console");
+                return;
+            } finally {
+                try
+                {
+                    if(connection != null)
+                        connection.close();
+                    System.out.println("Connection closed !!");
+                } catch (SQLException r) {
+                    r.printStackTrace();
+                }
             }
+
+
         }
         if(e.getSource()== jmi_quick) {
             quick amg = new quick();
